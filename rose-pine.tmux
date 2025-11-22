@@ -2,7 +2,8 @@
 #
 # Rosé Pine - tmux theme
 #
-# Almost done, any bug found file a PR to rose-pine/tmux
+# Any bugs, suggestions or features that would be nice? 
+#  -> https://github.com/rose-pine/tmux
 #
 # Inspired by dracula/tmux, catppucin/tmux & challenger-deep-theme/tmux
 #
@@ -272,18 +273,23 @@ main() {
 
     local field_separator
     # NOTE: Don't remove
-    field_separator="$(get_tmux_option "@rose_pine_field_separator" " | " )"
+    field_separator="$(get_tmux_option "@rose_pine_field_separator" "  " )"
+    # Make it white
+    # TODO: Make it user-definable
+    field_separator="#[fg=$thm_text]"$field_separator
 
     # END
 
-    local spacer
-    spacer=" "
-    # I know, stupid, right? For some reason, spaces aren't consistent
+    # local spacer
+    # spacer=" "
+    # I know, stupid, right? For some reason, spaces aren't consistent.
+    # User-set stuff, like the field separator, is not added here, but with the
+    # other sections (left/right-column) lol
 
     # These variables are the defaults so that the setw and set calls are easier to parse
 
     local show_window
-    readonly show_window=" #[fg=$thm_subtle]$current_window_icon #[fg=$thm_rose]#W$spacer"
+    readonly show_window="#[fg=$thm_subtle]$current_window_icon #[fg=$thm_rose]#W#[fg=$thm_text]"
 
     local show_window_in_window_status
     show_window_in_window_status="#[fg=$thm_iris]#I#[fg=$thm_iris,]$left_separator#[fg=$thm_iris]#W"
@@ -292,10 +298,10 @@ main() {
     show_window_in_window_status_current="#I#[fg=$thm_gold,bg=""]$left_separator#[fg=$thm_gold,bg=""]#W"
 
     local show_session
-    readonly show_session=" #[fg=#{?client_prefix,$thm_love,$thm_text}]$current_session_icon #[fg=$thm_text]#S "
+    readonly show_session="#[fg=#{?client_prefix,$thm_love,$thm_text}]$current_session_icon #[fg=$thm_text]#S"
 
     local show_user
-    readonly show_user="#[fg=$thm_iris]#(whoami)#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$username_icon "
+    readonly show_user="#[fg=$thm_iris]#(whoami)#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$username_icon"
 
     local show_host
     local hostname
@@ -305,16 +311,15 @@ main() {
         hostname="#H"
     fi
     readonly hostname
-    readonly show_host="$spacer#[fg=$thm_text]$hostname#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$hostname_icon "
+    readonly show_host="#[fg=$thm_text]$hostname#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$hostname_icon"
 
     local show_date_time
-    readonly show_date_time=" #[fg=$thm_foam]$date_time#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$date_time_icon "
+    readonly show_date_time="#[fg=$thm_foam]$date_time#[fg=$thm_subtle]$right_separator#[fg=$thm_subtle]$date_time_icon #[fg=$thm_text]"
 
     local show_directory
-    readonly show_directory="$spacer#[fg=$thm_subtle]$current_folder_icon #[fg=$thm_rose]#{b:pane_current_path} "
+    readonly show_directory="#[fg=$thm_subtle]$current_folder_icon #[fg=$thm_rose]#{b:pane_current_path}"
 
     local show_directory_in_window_status
-    # BUG: It doesn't let the user pass through a custom window name
     show_directory_in_window_status="#I$left_separator#[fg=$thm_gold,bg=""]#{b:pane_current_path}"
 
     local show_directory_in_window_status_current
@@ -369,13 +374,11 @@ main() {
         window_status_current_format=$custom_window_sep_current
         setw window-status-format "$window_status_format"
         setw window-status-current-format "$window_status_current_format"
-
     elif [[ "$show_current_program" == "on" ]]; then
         window_status_format=$show_window_in_window_status
         window_status_current_format=$show_window_in_window_status_current
         setw window-status-format "$window_status_format"
         setw window-status-current-format "$window_status_current_format"
-    # See line 268
     elif [[ "$window_directory" ]]; then
         local window_status_format=$show_directory_in_window_status
         local window_status_current_format=$show_directory_in_window_status_current
@@ -389,15 +392,15 @@ main() {
     fi
 
     if [[ "$user" == "on" ]]; then
-        right_column=$right_column$show_user
+        right_column=$right_column$show_user$field_separator
     fi
 
     if [[ "$host" == "on" ]]; then
-        right_column=$right_column$show_host
+        right_column=$right_column$show_host$field_separator
     fi
 
     if [[ "$date_time" != "" ]]; then
-        right_column=$right_column$show_date_time
+        right_column=$right_column$show_date_time$field_separator
     fi
 
     if [[ "$directory" == "on" ]]; then
@@ -409,7 +412,7 @@ main() {
     if [[ "$disable_active_window_menu" == "on" ]]; then
         left_column=$show_session
     else
-        left_column=$show_session$show_window
+        left_column=$show_session$field_separator$show_window
     fi
     #
     # Appending / Prepending custom user sections to
@@ -417,10 +420,10 @@ main() {
         left_column=$status_left_prepend_section$left_column
     fi
     if [[ "$status_left_append_section" != "" ]]; then
-        left_column=$left_column$status_left_append_section$spacer
+        left_column=$left_column' '$status_left_append_section
     fi
     if [[ "$status_right_prepend_section" != "" ]]; then
-        right_column=$status_right_prepend_section$right_column
+        right_column="#[fg=$thm_text]"$status_right_prepend_section' '$right_column
     fi
     if [[ "$status_right_append_section" != "" ]]; then
         right_column=$right_column$status_right_append_section
