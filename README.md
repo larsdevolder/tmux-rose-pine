@@ -41,7 +41,7 @@ For updating the plugin, the key combination is <kbd>Prefix + U</kbd> (which TPM
 <br>
 
 
-5. Optional but recommended: Activate the extra modules, they are enabled by writing 'on' after the option name
+5. Optional but recommended: Activate the extra modules, they are enabled by writing 'on' after the option name. Do NOT copy and paste this entire block, this is meant to be the whole option palette, not the recommended config (it doesn't work if all options are set on ;) )
 ```bash
 set -g @rose_pine_host 'on' # Enables hostname in the status bar
 set -g @rose_pine_hostname_short 'on' # Makes the hostname shorter by using tmux's '#h' format
@@ -102,8 +102,11 @@ set -g @rose_pine_status_right_prepend_section 'with normal text'
 set -g @rose_pine_status_right_append_section 'too'
 ```
 
+7. Better window names 
+- If you desire better window names (combining both directory and open programs), the plugin
+[tmux-window-name](https://github.com/ofirgall/tmux-window-name) works as intended, discussed and shown [here](https://github.com/rose-pine/tmux/issues/33).
 
-> This plugin is being developed and tested on tmux v3.2a on Pop_OS! (Ubuntu). If there are problems with other versions, do let me know.
+> This plugin is being developed and tested mainly on tmux v3.2a on Pop_OS! (Ubuntu). If there are problems with other versions, do let me know.
 
 
 ## Gallery

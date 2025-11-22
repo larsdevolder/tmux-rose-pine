@@ -44,7 +44,7 @@ unset_option() {
 
 main() {
     local theme
-    theme="$(get_tmux_option "@rose_pine_variant" "")"
+    theme="$(get_tmux_option "@rose_pine_variant" "main")"
 
     # INFO: Not removing the thm_hl_low and thm_hl_med colors for posible features
     # INFO: If some variables appear unused, they are being used either externally
